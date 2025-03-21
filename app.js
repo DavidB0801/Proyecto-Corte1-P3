@@ -6,8 +6,14 @@ function cargarTareas() {
     fetch("http://localhost:3000/tareas")
         .then(response => response.json())
         .then(tareas => {
-            const listaTareas = document.getElementById("lista-tareas");
-            listaTareas.innerHTML = "";
+            const tareasPendientes = document.getElementById("tareas-pendientes");
+            const tareasCompletadas = document.getElementById("tareas-completadas");
+            tareasPendientes.innerHTML = "";
+            tareasCompletadas.innerHTML = "";
+
+            // Contadores para tareas pendientes y completadas
+            let contadorPendientes = 0;
+            let contadorCompletadas = 0;
 
             tareas.forEach(tarea => {
                 console.log("Fecha de creación:", tarea.fecha_creacion); // Verifica el valor de fecha_creacion
@@ -37,8 +43,19 @@ function cargarTareas() {
                         <button class="eliminar" onclick="eliminarTarea(${tarea.Id})">Eliminar</button>
                     </div>
                 `;
-                listaTareas.appendChild(tareaElemento);
+
+                if (tarea.Estado) {
+                    tareasCompletadas.appendChild(tareaElemento);
+                    contadorCompletadas++; // Incrementar contador de tareas completadas
+                } else {
+                    tareasPendientes.appendChild(tareaElemento);
+                    contadorPendientes++; // Incrementar contador de tareas pendientes
+                }
             });
+
+            // Actualizar los títulos con el número de tareas
+            document.getElementById("titulo-pendientes").textContent = `Tareas Pendientes (${contadorPendientes})`;
+            document.getElementById("titulo-completadas").textContent = `Tareas Completadas (${contadorCompletadas})`;
         })
         .catch(error => console.error("Error al cargar las tareas:", error));
 }
@@ -47,10 +64,6 @@ function determinarEstado(fechaMaxima, estado) {
     if (estado === 1) return "verde"; // Completada
     const hoy = new Date().toISOString().split("T")[0];
     return new Date(fechaMaxima) < new Date(hoy) ? "rojo" : "gris"; // Rojo si vencida, gris si pendiente
-}
-
-function obtenerFechaActual() {
-    return new Date().toISOString().split('T')[0].replace(/-/g, "/"); // YYYY/MM/DD
 }
 
 function agregarTarea() {
@@ -93,78 +106,47 @@ function eliminarTarea(id) {
     }
 }
 
-// Funcionalidad para editar tareas
 let tareaActual = null;
 
-// Función para abrir el modal de edición
 function editarTarea(id) {
-    console.log("Intentando editar la tarea con ID:", id);
-    id = Number(id); // Convertir el ID a número
     fetch(`http://localhost:3000/tareas/${id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error al obtener la tarea");
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(tarea => {
-            tareaActual = tarea.Id; // Guardar el ID de la tarea en edición
+            tareaActual = tarea.Id;
             document.getElementById("editar-titulo").value = tarea.titulo;
             document.getElementById("editar-descripcion").value = tarea.descripcion;
             document.getElementById("editar-fecha_maxima").value = tarea.fecha_maxima;
-            document.getElementById("modal-edicion").style.display = "flex"; // Mostrar el modal
+            document.getElementById("editar-prioridad").value = tarea.Prioridad;
+            document.getElementById("modal-edicion").style.display = "flex";
         })
-        .catch(error => {
-            console.error("Error al obtener la tarea:", error);
-            alert("Hubo un error al cargar la tarea para editar.");
-        });
+        .catch(error => console.error("Error al obtener la tarea:", error));
 }
 
-// Función para guardar los cambios
 function guardarEdicion() {
     const titulo = document.getElementById("editar-titulo").value.trim();
     const descripcion = document.getElementById("editar-descripcion").value.trim();
     const fechaMaxima = document.getElementById("editar-fecha_maxima").value;
-    const prioridad = document.getElementById("editar-prioridad").value; // Asegúrate de que este campo exista en tu HTML
+    const prioridad = document.getElementById("editar-prioridad").value;
 
     if (!titulo || !descripcion || !fechaMaxima || !prioridad) {
         alert("Por favor, completa todos los campos.");
         return;
     }
 
-    console.log("ID de la tarea en edición:", tareaActual); // Depuración
-    console.log("Datos enviados:", { titulo, descripcion, fecha_maxima: fechaMaxima, prioridad }); // Depuración
-
     fetch(`http://localhost:3000/tareas/${tareaActual}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titulo, descripcion, fecha_maxima: fechaMaxima, prioridad }) // Incluye prioridad
+        body: JSON.stringify({ titulo, descripcion, fecha_maxima: fechaMaxima, prioridad })
     })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => {
-                throw new Error(`Error al guardar los cambios: ${err.error || response.statusText}`);
-            });
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(() => {
         cargarTareas();
         cancelarEdicion();
     })
-    .catch(error => {
-        console.error("Error al guardar los cambios:", error);
-        alert(error.message); // Muestra el mensaje de error
-    });
+    .catch(error => console.error("Error al guardar los cambios:", error));
 }
 
 function cancelarEdicion() {
-    document.getElementById("formulario-edicion").style.display = "none";
-    tareaActual = null;
-}
-
-// Función para cerrar el modal
-function cancelarEdicion() {
-    document.getElementById("modal-edicion").style.display = "none"; // Ocultar el modal
+    document.getElementById("modal-edicion").style.display = "none";
     tareaActual = null;
 }
