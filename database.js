@@ -8,6 +8,22 @@ const db = new sqlite3.Database('tareas.db', (err) => {
     }
 });
 
+// Crear la tabla de usuarios si no existe
+db.run(`
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id TEXT PRIMARY KEY NOT NULL UNIQUE,
+        nombre TEXT NOT NULL,
+        correo TEXT NOT NULL,
+        contraseña TEXT NOT NULL
+    );
+`, (err) => {
+    if (err) {
+        console.error("Error al crear la tabla usuarios:", err.message);
+    } else {
+        console.log("Tabla usuarios creada o ya existente.");
+    }
+});
+
 db.serialize(() => {
     db.run(
         `CREATE TABLE IF NOT EXISTS tareas (
