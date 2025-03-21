@@ -13,6 +13,9 @@ function cargarTareas() {
                 const estado = determinarEstado(tarea.fecha_maxima, tarea.Estado);
                 const estadoColor = estado === "rojo" ? "rojo" : estado === "gris" ? "gris" : "verde";
 
+                // Asegurar que la fecha de creación se muestra en formato YYYY/MM/DD
+                const fechaCreacion = tarea.fecha_creacion ? tarea.fecha_creacion.replace(/-/g, "/") : "No disponible";
+
                 const tareaElemento = document.createElement("div");
                 tareaElemento.className = "tarea";
 
@@ -21,7 +24,8 @@ function cargarTareas() {
                     <div class="info">
                         <h3>${tarea.titulo}</h3>
                         <p>${tarea.descripcion}</p>
-                        <p><strong>Fecha máxima:</strong> ${tarea.fecha_maxima}</p>
+                        <p><strong>Fecha máxima:</strong> ${tarea.fecha_maxima.replace(/-/g, "/")}</p>
+                        <p><strong>Fecha de creación:</strong> ${fechaCreacion}</p>
                         <p><strong>Prioridad:</strong> ${tarea.Prioridad}</p>
                     </div>
                     <div class="acciones">
@@ -35,14 +39,17 @@ function cargarTareas() {
                 listaTareas.appendChild(tareaElemento);
             });
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => console.error("Error al cargar las tareas:", error));
 }
 
 function determinarEstado(fechaMaxima, estado) {
     if (estado === 1) return "verde"; // Completada
     const hoy = new Date().toISOString().split("T")[0];
-    if (fechaMaxima < hoy) return "rojo"; // Vencida
-    return "gris"; // Pendiente
+    return new Date(fechaMaxima) < new Date(hoy) ? "rojo" : "gris"; // Rojo si vencida, gris si pendiente
+}
+
+function obtenerFechaActual() {
+    return new Date().toISOString().split('T')[0].replace(/-/g, "/"); // YYYY/MM/DD
 }
 
 function agregarTarea() {
@@ -56,14 +63,16 @@ function agregarTarea() {
         return;
     }
 
+    const nuevaTarea = { titulo, descripcion, fecha_maxima: fechaMaxima, prioridad };
+
     fetch("http://localhost:3000/tareas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titulo, descripcion, fecha_maxima: fechaMaxima, prioridad })
+        body: JSON.stringify(nuevaTarea)
     })
     .then(response => response.json())
     .then(() => cargarTareas())
-    .catch(error => console.error("Error:", error));
+    .catch(error => console.error("Error al agregar tarea:", error));
 }
 
 function marcarCompletada(id) {
@@ -72,24 +81,23 @@ function marcarCompletada(id) {
         headers: { "Content-Type": "application/json" },
     })
     .then(() => cargarTareas())
-    .catch(error => console.error("Error:", error));
+    .catch(error => console.error("Error al marcar tarea como completada:", error));
 }
 
 function eliminarTarea(id) {
     if (confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
         fetch(`http://localhost:3000/tareas/${id}`, { method: "DELETE" })
             .then(() => cargarTareas())
-            .catch(error => console.error("Error:", error));
+            .catch(error => console.error("Error al eliminar tarea:", error));
     }
 }
-
 
 // Funcionalidad para editar tareas
 let tareaActual = null;
 
-function editarTarea(titulo) {
-    console.log("Intentando editar la tarea con título:", titulo);
-    fetch(`http://localhost:3000/tareas/${encodeURIComponent(titulo)}`)
+function editarTarea(id) {
+    console.log("Intentando editar la tarea con ID:", id);
+    fetch(`http://localhost:3000/tareas/${id}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Error al obtener la tarea");
@@ -97,11 +105,11 @@ function editarTarea(titulo) {
             return response.json();
         })
         .then(tarea => {
-            tareaActual = tarea.titulo; // Guardar el título original para la actualización
+            tareaActual = tarea.Id; // Guardar el ID de la tarea en edición
             document.getElementById("editar-titulo").value = tarea.titulo;
             document.getElementById("editar-descripcion").value = tarea.descripcion;
             document.getElementById("editar-fecha_maxima").value = tarea.fecha_maxima;
-            document.getElementById("formulario-edicion").style.display = "block"; // Mostrar el formulario de edición
+            document.getElementById("formulario-edicion").style.display = "block"; // Mostrar el formulario
         })
         .catch(error => {
             console.error("Error al obtener la tarea:", error);
@@ -131,8 +139,8 @@ function guardarEdicion() {
         return response.json();
     })
     .then(() => {
-        cargarTareas(); // Recargar la lista de tareas
-        cancelarEdicion(); // Ocultar el formulario de edición
+        cargarTareas();
+        cancelarEdicion();
     })
     .catch(error => {
         console.error("Error al guardar los cambios:", error);
@@ -141,6 +149,6 @@ function guardarEdicion() {
 }
 
 function cancelarEdicion() {
-    document.getElementById("formulario-edicion").style.display = "none"; // Ocultar el formulario de edición
-    tareaActual = null; // Limpiar la tarea actual
+    document.getElementById("formulario-edicion").style.display = "none";
+    tareaActual = null;
 }

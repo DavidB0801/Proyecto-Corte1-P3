@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const db = require('./database');
+const crypto = require('crypto'); // Para generar IDs aleatorios
 
 const app = express();
 const PORT = 3000;
@@ -8,9 +9,14 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+// Función para generar un ID alfanumérico único
+function generarID() {
+    return 'T' + crypto.randomBytes(4).toString('hex').toUpperCase(); // Genera un ID tipo "T1A2B3C4"
+}
+
 // Ruta para obtener todas las tareas
 app.get('/tareas', (req, res) => {
-    db.all("SELECT * FROM tareas", (err, rows) => {
+    db.all("SELECT Id, titulo, descripcion, fecha_maxima, Estado, Prioridad, strftime('%Y/%m/%d', fecha_creacion) as fecha_creacion FROM tareas", (err, rows) => {
         if (err) {
             console.error("Error al obtener las tareas:", err.message);
             res.status(500).json({ error: err.message });
@@ -38,23 +44,32 @@ app.get('/tareas/:id', (req, res) => {
 // Ruta para agregar una nueva tarea
 app.post('/tareas', (req, res) => {
     const { titulo, descripcion, fecha_maxima, prioridad } = req.body;
+    const fecha_creacion = new Date().toISOString().split("T")[0].replace(/-/g, "/"); // "YYYY/MM/DD"
 
     if (!titulo || !descripcion || !fecha_maxima || !prioridad) {
         return res.status(400).json({ error: "Todos los campos son requeridos." });
     }
 
     db.run(
-        "INSERT INTO tareas (titulo, descripcion, fecha_maxima, Estado, Prioridad) VALUES (?, ?, ?, 0, ?)",
-        [titulo, descripcion, fecha_maxima, prioridad],
+        "INSERT INTO tareas (titulo, descripcion, fecha_maxima, Estado, Prioridad, fecha_creacion) VALUES (?, ?, ?, 0, ?, ?)",
+        [titulo, descripcion, fecha_maxima, prioridad, fecha_creacion],       
         function (err) {
             if (err) {
                 console.error("Error al agregar tarea:", err.message);
                 res.status(500).json({ error: err.message });
             } else {
-                res.json({ success: true, id: this.lastID });
+                db.get("SELECT fecha_creacion FROM tareas WHERE Id = ?", [this.lastID], (error, row) => {
+                    if (error) {
+                        console.error("Error al obtener fecha de creación:", error.message);
+                        res.status(500).json({ error: error.message });
+                    } else {
+                        res.json({ success: true, id: this.lastID, fecha_creacion: row.fecha_creacion });
+                    }
+                });
             }
         }
-    );
+    );    
+    
 });
 
 // Ruta para marcar una tarea como completada

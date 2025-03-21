@@ -15,10 +15,10 @@ db.serialize(() => {
             titulo TEXT NOT NULL,
             descripcion TEXT NOT NULL,
             fecha_maxima TEXT NOT NULL,
-            Estado INTEGER DEFAULT 0,  -- 0: Pendiente, 1: Completada
+            Estado INTEGER DEFAULT 0,
             Prioridad TEXT NOT NULL,
-            fecha_creacion INTEGER DEFAULT (strftime('%s', 'now'))
-        )`,
+            fecha_creacion TEXT DEFAULT (datetime('now', 'localtime'))
+        )`,    
         (err) => {
             if (err) {
                 console.error("Error al crear la tabla tareas:", err.message);
@@ -28,5 +28,6 @@ db.serialize(() => {
         }
     );
 });
+
 
 module.exports = db;
