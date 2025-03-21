@@ -11,6 +11,7 @@
 <body>
     <header>
         <h1>Gestor de Tareas</h1>
+        <button id="cerrar-sesion" class="cerrar-sesion">Cerrar sesión</button>
     </header>
     <main>
         <section class="formulario">
@@ -52,5 +53,10 @@
             </div>
         </div>
     </div>
+    <script>document.getElementById("cerrar-sesion").addEventListener("click", () => {
+        // Aquí puedes agregar la lógica para cerrar la sesión, como eliminar tokens, etc.
+        alert("Sesión cerrada"); // Mensaje temporal
+        window.location.href = "login.html"; // Redirigir al archivo login.html
+    });</script>
 </body>
 </html>
