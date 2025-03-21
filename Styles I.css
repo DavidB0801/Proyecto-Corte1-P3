@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;  /* Asegura que el body ocupe toda la altura de la página */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+     /* Organiza el contenido en columnas */
+}
+
+/* Estilo para el header */
+header {
+    background-color: #ffffff;
+    color: #333;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Asegura que el header se quede sobre los demás elementos */
+}
+
+/* Logo y texto */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: black;
+}
+
+.logo-img {
+    width: 40px;
+    height: auto;
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: bold;
+    color: #51DFD9;
+    text-decoration: none;
+}
+
+/* Menú de navegación */
+/* Menú de navegación */
+.navbar ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* Centra el menú */
+    padding-bottom: 100px;
+    line-height: 0;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 20px;
+    transition: color 0.3s ease;
+    
+}
+
+.navbar ul li a:hover {
+    color: #51DFD9;
+}
+
+/* Estilo para los botones */
+.cta {
+    display: flex;
+    gap: 10px;
+}
+
+.cta a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-register {
+    background-color: #51DFD9;
+}
+
+.btn-register:hover {
+    background-color: #45bdb0;
+}
+
+.btn-login {
+    background-color: #333;
+}
+
+.btn-login:hover {
+    background-color: #555;
+}
+
+/* Contenedor principal que se adapta a la altura disponible */
+.container-eslogan {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 80%;
+    max-width: 960px;
+    padding: 70px 20px;
+    margin: 50px auto;
+    margin-top: 120px; /* Ajusta el margen superior para que no esté cubierto por el header fijo */
+}
+
+.container-eslogan h1 {
+    font-size: 5rem;
+    color: #2d2d2d;
+    margin-bottom: 10px;
+    font-family: "Molengo", serif;
+    font-weight: 500;
+}
+
+.Strong_produc {
+    color: #51DFD9;
+}
+
+.center-text {
+    text-align: center;
+    font-size: 25px;
+    margin: 0 auto;
+    max-width: 75%;
+}
+
+/* Botón con estilo */
+.boton {
+    --bg: #333;
+    --hover-bg: #51DFD9;
+    --hover-text: #000;
+    color: #fff;
+    cursor: pointer;
+    border: 1px solid var(--bg);
+    border-radius: 4px;
+    padding: 0.8em 2em;
+    background: var(--bg);
+    transition: 0.2s;
+    margin-top: 40px;
+    width: 340px;
+    font-size: 22px;
+}
+
+.boton:hover {
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+}
+
+.boton:active {
+    transform: translate(0);
+    box-shadow: none;
+}
+
+/* Estilo del footer para que siempre quede al final del contenido */
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    margin-top: auto; /* Esto asegura que el footer se quede al final */
+}
+
+.footer p {
+    margin: 0;
+    color: rgb(255, 255, 255);
+}
