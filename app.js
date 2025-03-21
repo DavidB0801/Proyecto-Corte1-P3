@@ -10,11 +10,12 @@ function cargarTareas() {
             listaTareas.innerHTML = "";
 
             tareas.forEach(tarea => {
+                console.log("Fecha de creación:", tarea.fecha_creacion); // Verifica el valor de fecha_creacion
                 const estado = determinarEstado(tarea.fecha_maxima, tarea.Estado);
                 const estadoColor = estado === "rojo" ? "rojo" : estado === "gris" ? "gris" : "verde";
 
                 // Asegurar que la fecha de creación se muestra en formato YYYY/MM/DD
-                const fechaCreacion = tarea.fecha_creacion ? tarea.fecha_creacion.replace(/-/g, "/") : "No disponible";
+                const fechaCreacion = tarea.fecha_creacion ? tarea.fecha_creacion : "No disponible"; // Aquí ya está formateada
 
                 const tareaElemento = document.createElement("div");
                 tareaElemento.className = "tarea";
@@ -25,7 +26,7 @@ function cargarTareas() {
                         <h3>${tarea.titulo}</h3>
                         <p>${tarea.descripcion}</p>
                         <p><strong>Fecha máxima:</strong> ${tarea.fecha_maxima.replace(/-/g, "/")}</p>
-                        <p><strong>Fecha de creación:</strong> ${fechaCreacion}</p>
+                        <p><strong>Fecha de creación:</strong> ${fechaCreacion}</p> <!-- Aquí se muestra -->
                         <p><strong>Prioridad:</strong> ${tarea.Prioridad}</p>
                     </div>
                     <div class="acciones">
