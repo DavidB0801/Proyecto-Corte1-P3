@@ -10,12 +10,11 @@ function cargarTareas() {
             listaTareas.innerHTML = "";
 
             tareas.forEach(tarea => {
+                const estado = determinarEstado(tarea.fecha_maxima, tarea.Estado);
+                const estadoColor = estado === "rojo" ? "rojo" : estado === "gris" ? "gris" : "verde";
+
                 const tareaElemento = document.createElement("div");
                 tareaElemento.className = "tarea";
-
-                // Determinar el estado de la tarea
-                const estado = determinarEstado(tarea.fecha_maxima, tarea.completada);
-                const estadoColor = estado === "rojo" ? "rojo" : estado === "gris" ? "gris" : "verde";
 
                 tareaElemento.innerHTML = `
                     <div class="estado ${estadoColor}"></div>
@@ -23,13 +22,14 @@ function cargarTareas() {
                         <h3>${tarea.titulo}</h3>
                         <p>${tarea.descripcion}</p>
                         <p><strong>Fecha máxima:</strong> ${tarea.fecha_maxima}</p>
+                        <p><strong>Prioridad:</strong> ${tarea.Prioridad}</p>
                     </div>
                     <div class="acciones">
-                        <button onclick="marcarCompletada('${tarea.titulo}')" class="${tarea.completada ? 'completada' : ''}">
-                            ${tarea.completada ? "Completada" : "Completar"}
+                        <button onclick="marcarCompletada(${tarea.Id})" class="${tarea.Estado ? 'completada' : ''}">
+                            ${tarea.Estado ? "Completada" : "Completar"}
                         </button>
-                        <button class="editar" onclick="editarTarea('${tarea.titulo}')">Editar</button>
-                        <button class="eliminar" onclick="eliminarTarea('${tarea.titulo}')">Eliminar</button>
+                        <button class="editar" onclick="editarTarea(${tarea.Id})">Editar</button>
+                        <button class="eliminar" onclick="eliminarTarea(${tarea.Id})">Eliminar</button>
                     </div>
                 `;
                 listaTareas.appendChild(tareaElemento);
@@ -38,59 +38,51 @@ function cargarTareas() {
         .catch(error => console.error("Error:", error));
 }
 
-function determinarEstado(fechaMaxima, completada) {
-    if (completada) return "verde"; // Tarea completada
-    const hoy = new Date().toISOString().split("T")[0]; // Fecha actual en formato YYYY-MM-DD
-    if (fechaMaxima < hoy) return "rojo"; // Tarea vencida
-    return "gris"; // Tarea pendiente
+function determinarEstado(fechaMaxima, estado) {
+    if (estado === 1) return "verde"; // Completada
+    const hoy = new Date().toISOString().split("T")[0];
+    if (fechaMaxima < hoy) return "rojo"; // Vencida
+    return "gris"; // Pendiente
 }
 
 function agregarTarea() {
     const titulo = document.getElementById("titulo").value.trim();
     const descripcion = document.getElementById("descripcion").value.trim();
     const fechaMaxima = document.getElementById("fecha_maxima").value;
+    const prioridad = document.getElementById("prioridad").value;
 
-    if (!titulo || !descripcion || !fechaMaxima) {
-        alert("Por favor, completa todos los campos.");
+    if (!titulo || !descripcion || !fechaMaxima || !prioridad) {
+        alert("Todos los campos son obligatorios.");
         return;
     }
 
     fetch("http://localhost:3000/tareas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titulo, descripcion, fecha_maxima: fechaMaxima })
+        body: JSON.stringify({ titulo, descripcion, fecha_maxima: fechaMaxima, prioridad })
     })
-    .then(() => {
-        cargarTareas();
-        document.getElementById("titulo").value = "";
-        document.getElementById("descripcion").value = "";
-        document.getElementById("fecha_maxima").value = "";
-    })
+    .then(response => response.json())
+    .then(() => cargarTareas())
     .catch(error => console.error("Error:", error));
 }
 
-function marcarCompletada(titulo) {
-    fetch(`http://localhost:3000/tareas/${titulo}/completar`, {
+function marcarCompletada(id) {
+    fetch(`http://localhost:3000/tareas/${id}/completar`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Error al marcar la tarea como completada");
-        }
-        return response.json();
     })
     .then(() => cargarTareas())
     .catch(error => console.error("Error:", error));
 }
 
-function eliminarTarea(titulo) {
+function eliminarTarea(id) {
     if (confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
-        fetch(`http://localhost:3000/tareas/${titulo}`, { method: "DELETE" })
+        fetch(`http://localhost:3000/tareas/${id}`, { method: "DELETE" })
             .then(() => cargarTareas())
             .catch(error => console.error("Error:", error));
     }
 }
+
 
 // Funcionalidad para editar tareas
 let tareaActual = null;

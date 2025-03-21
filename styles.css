@@ -23,6 +23,14 @@ main {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
 }
+.formulario select {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #51DFD9;
+    border-radius: 4px;
+    background-color: white;
+}
 .formulario input[type="text"], .formulario input[type="date"] {
     width: 100%;
     padding: 0.5rem;

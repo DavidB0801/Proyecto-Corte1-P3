@@ -17,8 +17,16 @@
             <input type="text" id="titulo" placeholder="Título de la tarea">
             <input type="text" id="descripcion" placeholder="Descripción">
             <input type="date" id="fecha_maxima" placeholder="Fecha máxima">
+            
+            <select id="prioridad">
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+            </select>
+        
             <button onclick="agregarTarea()">Agregar Tarea</button>
         </section>
+        
         <section class="lista-tareas">
             <h2>Lista de Tareas</h2>
             <div id="lista-tareas"></div>

@@ -11,10 +11,13 @@ const db = new sqlite3.Database('tareas.db', (err) => {
 db.serialize(() => {
     db.run(
         `CREATE TABLE IF NOT EXISTS tareas (
-            titulo TEXT PRIMARY KEY,
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            titulo TEXT NOT NULL,
             descripcion TEXT NOT NULL,
             fecha_maxima TEXT NOT NULL,
-            completada INTEGER DEFAULT 0
+            Estado INTEGER DEFAULT 0,  -- 0: Pendiente, 1: Completada
+            Prioridad TEXT NOT NULL,
+            fecha_creacion INTEGER DEFAULT (strftime('%s', 'now'))
         )`,
         (err) => {
             if (err) {

@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./database');
 
-const app = express(); // Inicializa la aplicación Express
+const app = express();
 const PORT = 3000;
 
 app.use(cors());
@@ -20,10 +20,10 @@ app.get('/tareas', (req, res) => {
     });
 });
 
-// Ruta para obtener una tarea específica
-app.get('/tareas/:titulo', (req, res) => {
-    const titulo = req.params.titulo;
-    db.get("SELECT * FROM tareas WHERE titulo = ?", [titulo], (err, row) => {
+// Ruta para obtener una tarea específica por ID
+app.get('/tareas/:id', (req, res) => {
+    const id = req.params.id;
+    db.get("SELECT * FROM tareas WHERE Id = ?", [id], (err, row) => {
         if (err) {
             console.error("Error al obtener la tarea:", err.message);
             res.status(500).json({ error: err.message });
@@ -35,34 +35,34 @@ app.get('/tareas/:titulo', (req, res) => {
     });
 });
 
-// Ruta para agregar una tarea
+// Ruta para agregar una nueva tarea
 app.post('/tareas', (req, res) => {
-    const { titulo, descripcion, fecha_maxima } = req.body;
+    const { titulo, descripcion, fecha_maxima, prioridad } = req.body;
 
-    if (!titulo || !descripcion || !fecha_maxima) {
+    if (!titulo || !descripcion || !fecha_maxima || !prioridad) {
         return res.status(400).json({ error: "Todos los campos son requeridos." });
     }
 
     db.run(
-        "INSERT INTO tareas (titulo, descripcion, fecha_maxima) VALUES (?, ?, ?)",
-        [titulo, descripcion, fecha_maxima],
+        "INSERT INTO tareas (titulo, descripcion, fecha_maxima, Estado, Prioridad) VALUES (?, ?, ?, 0, ?)",
+        [titulo, descripcion, fecha_maxima, prioridad],
         function (err) {
             if (err) {
                 console.error("Error al agregar tarea:", err.message);
                 res.status(500).json({ error: err.message });
             } else {
-                res.json({ success: true });
+                res.json({ success: true, id: this.lastID });
             }
         }
     );
 });
 
 // Ruta para marcar una tarea como completada
-app.put('/tareas/:titulo/completar', (req, res) => {
-    const titulo = req.params.titulo;
+app.put('/tareas/:id/completar', (req, res) => {
+    const id = req.params.id;
     db.run(
-        "UPDATE tareas SET completada = 1 WHERE titulo = ?",
-        [titulo],
+        "UPDATE tareas SET Estado = 1 WHERE Id = ?",
+        [id],
         function (err) {
             if (err) {
                 console.error("Error al marcar tarea como completada:", err.message);
@@ -75,17 +75,17 @@ app.put('/tareas/:titulo/completar', (req, res) => {
 });
 
 // Ruta para editar una tarea
-app.put('/tareas/:titulo', (req, res) => {
-    const tituloOriginal = req.params.titulo;
-    const { titulo, descripcion, fecha_maxima } = req.body;
+app.put('/tareas/:id', (req, res) => {
+    const id = req.params.id;
+    const { titulo, descripcion, fecha_maxima, prioridad } = req.body;
 
-    if (!titulo || !descripcion || !fecha_maxima) {
+    if (!titulo || !descripcion || !fecha_maxima || !prioridad) {
         return res.status(400).json({ error: "Todos los campos son requeridos." });
     }
 
     db.run(
-        "UPDATE tareas SET titulo = ?, descripcion = ?, fecha_maxima = ? WHERE titulo = ?",
-        [titulo, descripcion, fecha_maxima, tituloOriginal],
+        "UPDATE tareas SET titulo = ?, descripcion = ?, fecha_maxima = ?, Prioridad = ? WHERE Id = ?",
+        [titulo, descripcion, fecha_maxima, prioridad, id],
         function (err) {
             if (err) {
                 console.error("Error al editar tarea:", err.message);
@@ -98,11 +98,11 @@ app.put('/tareas/:titulo', (req, res) => {
 });
 
 // Ruta para eliminar una tarea
-app.delete('/tareas/:titulo', (req, res) => {
-    const titulo = req.params.titulo;
+app.delete('/tareas/:id', (req, res) => {
+    const id = req.params.id;
     db.run(
-        "DELETE FROM tareas WHERE titulo = ?",
-        [titulo],
+        "DELETE FROM tareas WHERE Id = ?",
+        [id],
         function (err) {
             if (err) {
                 console.error("Error al eliminar tarea:", err.message);
