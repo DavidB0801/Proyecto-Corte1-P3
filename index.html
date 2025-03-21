@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Tareas</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Gestor de Tareas</h1>
+    </header>
+    <main>
+        <section class="formulario">
+            <h2>Agregar Nueva Tarea</h2>
+            <input type="text" id="titulo" placeholder="Título de la tarea">
+            <input type="text" id="descripcion" placeholder="Descripción">
+            <input type="date" id="fecha_maxima" placeholder="Fecha máxima">
+            <button onclick="agregarTarea()">Agregar Tarea</button>
+        </section>
+        <section class="lista-tareas">
+            <h2>Lista de Tareas</h2>
+            <div id="lista-tareas"></div>
+        </section>
+
+        <!-- Formulario de edición (oculto por defecto) -->
+        <div id="formulario-edicion" class="formulario" style="display: none;">
+            <h2>Editar Tarea</h2>
+            <input type="text" id="editar-titulo" placeholder="Título de la tarea">
+            <input type="text" id="editar-descripcion" placeholder="Descripción">
+            <input type="date" id="editar-fecha_maxima" placeholder="Fecha máxima">
+            <button onclick="guardarEdicion()">Guardar Cambios</button>
+            <button onclick="cancelarEdicion()" class="cancelar">Cancelar</button>
+        </div>
+    </main>
+</body>
+</html>

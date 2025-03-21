@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #51DFD9;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+main {
+    padding: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.formulario {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+.formulario input[type="text"], .formulario input[type="date"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #51DFD9;
+    border-radius: 4px;
+}
+.formulario button {
+    background-color: #51DFD9;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+.formulario button:hover {
+    background-color: #40C4B8;
+}
+.lista-tareas {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.tarea {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+.tarea:last-child {
+    border-bottom: none;
+}
+.tarea .info {
+    flex: 1;
+    margin: 0 10px;
+}
+.tarea .info h3 {
+    margin: 0;
+    color: #333;
+}
+.tarea .info p {
+    margin: 0.5rem 0 0;
+    color: #666;
+}
+.tarea .estado {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+.tarea .estado.rojo {
+    background-color: #ff4d4d;
+}
+.tarea .estado.gris {
+    background-color: #ccc;
+}
+.tarea .estado.verde {
+    background-color: #4CAF50;
+}
+.tarea .acciones {
+    display: flex;
+    gap: 0.5rem;
+}
+.tarea .acciones button {
+    background-color: #51DFD9;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.tarea .acciones button.completada {
+    background-color: #4CAF50;
+}
+.tarea .acciones button.eliminar {
+    background-color: #ff4d4d;
+}
+.tarea .acciones button:hover {
+    opacity: 0.9;
+}
+
+/* Botón de editar */
+.tarea .acciones button.editar {
+    background-color: #ffa500;
+}
+
+/* Formulario de edición */
+#formulario-edicion {
+    margin-top: 2rem;
+}
+
+/* Estilos específicos para el botón de "Cancelar" */
+.formulario button.cancelar {
+    background-color: #ff4d4d; /* Color rojo */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.formulario button.cancelar:hover {
+    background-color: #e60000; /* Color rojo más oscuro al pasar el mouse */
+}
