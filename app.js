@@ -124,20 +124,26 @@ function guardarEdicion() {
     const titulo = document.getElementById("editar-titulo").value.trim();
     const descripcion = document.getElementById("editar-descripcion").value.trim();
     const fechaMaxima = document.getElementById("editar-fecha_maxima").value;
+    const prioridad = document.getElementById("editar-prioridad").value; // Asegúrate de que este campo exista en tu HTML
 
-    if (!titulo || !descripcion || !fechaMaxima) {
+    if (!titulo || !descripcion || !fechaMaxima || !prioridad) {
         alert("Por favor, completa todos los campos.");
         return;
     }
 
+    console.log("ID de la tarea en edición:", tareaActual); // Depuración
+    console.log("Datos enviados:", { titulo, descripcion, fecha_maxima: fechaMaxima, prioridad }); // Depuración
+
     fetch(`http://localhost:3000/tareas/${tareaActual}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titulo, descripcion, fecha_maxima: fechaMaxima })
+        body: JSON.stringify({ titulo, descripcion, fecha_maxima: fechaMaxima, prioridad }) // Incluye prioridad
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error("Error al guardar los cambios");
+            return response.json().then(err => {
+                throw new Error(`Error al guardar los cambios: ${err.error || response.statusText}`);
+            });
         }
         return response.json();
     })
@@ -147,7 +153,7 @@ function guardarEdicion() {
     })
     .catch(error => {
         console.error("Error al guardar los cambios:", error);
-        alert("Hubo un error al guardar los cambios.");
+        alert(error.message); // Muestra el mensaje de error
     });
 }
 

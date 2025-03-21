@@ -95,7 +95,7 @@ app.put('/tareas/:id', (req, res) => {
     const { titulo, descripcion, fecha_maxima, prioridad } = req.body;
 
     if (!titulo || !descripcion || !fecha_maxima || !prioridad) {
-        return res.status(400).json({ error: "Todos los campos son requeridos." });
+        return res.status(400).json({ error: "Todos los campos son requeridos: titulo, descripcion, fecha_maxima, prioridad." });
     }
 
     db.run(

@@ -179,7 +179,7 @@ main {
 /* Estilos para los inputs del modal */
 .modal-contenido input[type="text"],
 .modal-contenido input[type="date"] {
-    width: 100%;
+    width: 95%;
     padding: 0.75rem;
     margin: 0.5rem 0;
     border: 1px solid #51DFD9;
@@ -224,6 +224,15 @@ main {
     color: #333;
     font-size: 1.5rem;
     text-align: center;
+}
+
+.modal-contenido select {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid #51DFD9;
+    border-radius: 4px;
+    font-size: 1rem;
 }
 
 /* Estilos para los botones dentro del modal */
