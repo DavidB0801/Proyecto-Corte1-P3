@@ -17,13 +17,11 @@
             <input type="text" id="titulo" placeholder="Título de la tarea">
             <input type="text" id="descripcion" placeholder="Descripción">
             <input type="date" id="fecha_maxima" placeholder="Fecha máxima">
-            
             <select id="prioridad">
                 <option value="Baja">Baja</option>
                 <option value="Media">Media</option>
                 <option value="Alta">Alta</option>
             </select>
-        
             <button onclick="agregarTarea()">Agregar Tarea</button>
         </section>
         
@@ -31,17 +29,20 @@
             <h2>Lista de Tareas</h2>
             <div id="lista-tareas"></div>
         </section>
+    </main>
 
-        <!-- Formulario de edición (oculto por defecto) -->
-        <div id="formulario-edicion" class="formulario" style="display: none;">
+    <!-- Modal de edición -->
+    <div id="modal-edicion" class="modal">
+        <div class="modal-contenido">
             <h2>Editar Tarea</h2>
             <input type="text" id="editar-titulo" placeholder="Título de la tarea">
             <input type="text" id="editar-descripcion" placeholder="Descripción">
             <input type="date" id="editar-fecha_maxima" placeholder="Fecha máxima">
-            <button onclick="guardarEdicion()">Guardar Cambios</button>
-            <button onclick="cancelarEdicion()" class="cancelar">Cancelar</button>
+            <div class="botones">
+                <button onclick="guardarEdicion()">Guardar Cambios</button>
+                <button onclick="cancelarEdicion()" class="cancelar">Cancelar</button>
+            </div>
         </div>
-    </main>
+    </div>
 </body>
-
 </html>

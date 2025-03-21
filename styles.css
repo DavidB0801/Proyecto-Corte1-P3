@@ -139,3 +139,97 @@ main {
 .formulario button.cancelar:hover {
     background-color: #e60000; /* Color rojo más oscuro al pasar el mouse */
 }
+
+/* Estilos para el modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo difuminado */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté por encima de todo */
+}
+
+.modal-contenido {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animación para el modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para los inputs del modal */
+.modal-contenido input[type="text"],
+.modal-contenido input[type="date"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid #51DFD9;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.modal-contenido input[type="text"]:focus,
+.modal-contenido input[type="date"]:focus {
+    border-color: #40C4B8;
+    outline: none;
+}
+
+/* Estilos para los botones del modal */
+.modal-contenido button {
+    background-color: #51DFD9;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.modal-contenido button:hover {
+    background-color: #40C4B8;
+}
+
+.modal-contenido .cancelar {
+    background-color: #ff4d4d;
+    margin-left: 1rem;
+}
+
+.modal-contenido .cancelar:hover {
+    background-color: #e60000;
+}
+
+/* Estilos para el título del modal */
+.modal-contenido h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* Estilos para los botones dentro del modal */
+.modal-contenido .botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}

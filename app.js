@@ -95,8 +95,10 @@ function eliminarTarea(id) {
 // Funcionalidad para editar tareas
 let tareaActual = null;
 
+// Función para abrir el modal de edición
 function editarTarea(id) {
     console.log("Intentando editar la tarea con ID:", id);
+    id = Number(id); // Convertir el ID a número
     fetch(`http://localhost:3000/tareas/${id}`)
         .then(response => {
             if (!response.ok) {
@@ -109,7 +111,7 @@ function editarTarea(id) {
             document.getElementById("editar-titulo").value = tarea.titulo;
             document.getElementById("editar-descripcion").value = tarea.descripcion;
             document.getElementById("editar-fecha_maxima").value = tarea.fecha_maxima;
-            document.getElementById("formulario-edicion").style.display = "block"; // Mostrar el formulario
+            document.getElementById("modal-edicion").style.display = "flex"; // Mostrar el modal
         })
         .catch(error => {
             console.error("Error al obtener la tarea:", error);
@@ -117,6 +119,7 @@ function editarTarea(id) {
         });
 }
 
+// Función para guardar los cambios
 function guardarEdicion() {
     const titulo = document.getElementById("editar-titulo").value.trim();
     const descripcion = document.getElementById("editar-descripcion").value.trim();
@@ -150,5 +153,11 @@ function guardarEdicion() {
 
 function cancelarEdicion() {
     document.getElementById("formulario-edicion").style.display = "none";
+    tareaActual = null;
+}
+
+// Función para cerrar el modal
+function cancelarEdicion() {
+    document.getElementById("modal-edicion").style.display = "none"; // Ocultar el modal
     tareaActual = null;
 }
